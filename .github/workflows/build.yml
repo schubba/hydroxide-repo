@@ -25,21 +25,18 @@ jobs:
 
       - name: Create Packages
         run: |
-          # 1. Version festlegen
-          VERSION=$(~/go/bin/hydroxide -v 2>&1 | awk '{print $2}' | sed 's/v//' || echo "0.1.0")
+          # 1. Datei in das aktuelle Arbeitsverzeichnis kopieren
+          cp /home/runner/go/bin/hydroxide .
           
-          # 2. Die exakte Zielstruktur lokal nachbauen
-          # Wir erstellen den Pfad, in dem die Datei später auf dem Zielsystem liegen soll
-          mkdir -p usr/local/bin
-          cp ~/go/bin/hydroxide usr/local/bin/
+          # 2. Version manuell setzen (für den ersten Erfolg)
+          VERSION="0.1.0"
           
           # 3. DEB Paket bauen
-          # Wir sagen fpm: Nimm alles ab dem aktuellen Verzeichnis (.)
-          # fpm erkennt automatisch die usr/local/bin Struktur
-          fpm -s dir -t deb -n hydroxide -v $VERSION usr
+          # Wir geben den Pfad zur Datei 'hydroxide' direkt an
+          fpm -s dir -t deb -n hydroxide -v $VERSION --prefix /usr/local/bin hydroxide
           
           # 4. RPM Paket bauen
-          fpm -s dir -t rpm -n hydroxide -v $VERSION usr
+          fpm -s dir -t rpm -n hydroxide -v $VERSION --prefix /usr/local/bin hydroxide
 
 
       - name: Push to Cloudsmith
