@@ -34,22 +34,40 @@ jobs:
           echo "Building stable version: $REAL_VERSION"
 
           # 2. Install Hydroxide at EXACTLY the discovered stable version
-          # This ensures that the binary content matches the package version
           go install github.com/emersion/hydroxide/cmd/hydroxide@v$REAL_VERSION
           
           # 3. Copy binary to workspace for easier packaging
           cp /home/runner/go/bin/hydroxide .
 
-          # 4. Create DEB and RPM packages using FPM
+          # 4. Define Package Metadata
+          DESCRIPTION="A lightweight CLI Proton Mail bridge, providing IMAP/SMTP endpoints."
+          MAINTAINER="Martin Schon <schon.mar@protonmail.com>"
+          HOMEPAGE="https://github.com/emersion/hydroxide"
+
+          # 5. Create DEB and RPM packages using FPM with enriched metadata
           # The binary will be installed to /usr/local/bin on the target system
-          fpm -s dir -t deb -n hydroxide -v $REAL_VERSION --prefix /usr/local/bin hydroxide
-          fpm -s dir -t rpm -n hydroxide -v $REAL_VERSION --prefix /usr/local/bin hydroxide
+          fpm -s dir -t deb -n hydroxide -v $REAL_VERSION \
+            --maintainer "$MAINTAINER" \
+            --description "$DESCRIPTION" \
+            --url "$HOMEPAGE" \
+            --license "MIT" \
+            --vendor "Hydroxide Community" \
+            --prefix /usr/local/bin hydroxide
+
+          fpm -s dir -t rpm -n hydroxide -v $REAL_VERSION \
+            --maintainer "$MAINTAINER" \
+            --description "$DESCRIPTION" \
+            --url "$HOMEPAGE" \
+            --license "MIT" \
+            --vendor "Hydroxide Community" \
+            --prefix /usr/local/bin hydroxide
 
       - name: Push to Cloudsmith
         env:
           CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
         run: |
           # Install Cloudsmith CLI and push the artifacts
+          # --republish allows overwriting existing versions for the nightly check
           # Packages are automatically GPG-signed by Cloudsmith upon upload
           pip install cloudsmith-cli
           cloudsmith push deb opensource-89f5/hydroxide/any-distro/any-version *.deb --republish
