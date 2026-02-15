@@ -16,6 +16,7 @@ Run the following command to automatically add the repository and its GPG signin
 ```bash
 curl -1sLf '[https://dl.cloudsmith.io/public/opensource-89f5/hydroxide/setup.deb.sh](https://dl.cloudsmith.io/public/opensource-89f5/hydroxide/setup.deb.sh)' | sudo -E bash
 sudo apt update && sudo apt install hydroxide
+```
 
 ### Fedora / RHEL / CentOS / AlmaLinux
 Run the following command to set up the RPM repository:
