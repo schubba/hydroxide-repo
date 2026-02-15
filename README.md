@@ -39,7 +39,7 @@ After installation, you can authorize your account and start the bridge:
 
 To ensure Hydroxide starts automatically and is accessible from other devices (e.g., your smartphone with K-9 Mail), follow these steps to set up the background service.
 
-1. Configuration (Environment)
+### 1. Configuration (Environment)
 Define the IP address Hydroxide should listen on. Create the file /etc/default/hydroxide:
 
 ```bash
@@ -47,7 +47,7 @@ Define the IP address Hydroxide should listen on. Create the file /etc/default/h
 echo 'HYDROXIDE_LISTEN_IP=0.0.0.0' | sudo tee /etc/default/hydroxide
 ```
 
-2. Systemd Unit File
+### 2. Systemd Unit File
 Create the service file at /etc/systemd/system/hydroxide.service
 
 ```ini,TOML
@@ -77,6 +77,18 @@ StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
+```
+### 3. Enable and Start
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now hydroxide
+```
+
+### 4. Monitoring
+You can monitor the bridge logs in real-time using:
+
+```bash
+sudo journalctl -u hydroxide -f
 ```
 
 ## Maintenance & Safety
