@@ -25,19 +25,21 @@ jobs:
 
       - name: Create Packages
         run: |
-          # 1. Datei in das aktuelle Arbeitsverzeichnis kopieren
+          # 1. Die aktuellste Version vom Original-Repo abfragen
+          # Wir nutzen das GitHub API, um das neueste Release-Tag zu finden
+          REAL_VERSION=$(curl -s https://api.github.com/repos/emersion/hydroxide/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed 's/v//')
+          
+          # Fallback, falls das API-Limit mal zuschlägt
+          if [ -z "$REAL_VERSION" ]; then REAL_VERSION="0.1.0"; fi
+          
+          echo "Bauen der Version: $REAL_VERSION"
+
+          # 2. Datei in das Arbeitsverzeichnis holen
           cp /home/runner/go/bin/hydroxide .
           
-          # 2. Version manuell setzen (für den ersten Erfolg)
-          VERSION="0.1.0"
-          
-          # 3. DEB Paket bauen
-          # Wir geben den Pfad zur Datei 'hydroxide' direkt an
-          fpm -s dir -t deb -n hydroxide -v $VERSION --prefix /usr/local/bin hydroxide
-          
-          # 4. RPM Paket bauen
-          fpm -s dir -t rpm -n hydroxide -v $VERSION --prefix /usr/local/bin hydroxide
-
+          # 3. Pakete bauen mit der echten Versionsnummer
+          fpm -s dir -t deb -n hydroxide -v $REAL_VERSION --prefix /usr/local/bin hydroxide
+          fpm -s dir -t rpm -n hydroxide -v $REAL_VERSION --prefix /usr/local/bin hydroxide
 
       - name: Push to Cloudsmith
         env:
