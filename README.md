@@ -14,7 +14,7 @@ Official Proton Mail Bridge packages can be difficult to manage via standard pac
 ### Debian / Ubuntu / Mint / Pop!_OS
 Run the following command to automatically add the repository and its GPG signing key:
 ```bash
-curl -1sLf '[https://dl.cloudsmith.io/public/opensource-89f5/hydroxide/setup.deb.sh](https://dl.cloudsmith.io/public/opensource-89f5/hydroxide/setup.deb.sh)' | sudo -E bash
+curl -1sLf "https://dl.cloudsmith.io/public/opensource-89f5/hydroxide/setup.deb.sh" | sudo -E bash
 sudo apt update && sudo apt install hydroxide
 ```
 
@@ -22,7 +22,7 @@ sudo apt update && sudo apt install hydroxide
 Run the following command to set up the RPM repository:
 
 ```bash
-curl -1sLf '[https://dl.cloudsmith.io/public/opensource-89f5/hydroxide/setup.rpm.sh](https://dl.cloudsmith.io/public/opensource-89f5/hydroxide/setup.rpm.sh)' | sudo -E bash
+curl -1sLf "https://dl.cloudsmith.io/public/opensource-89f5/hydroxide/setup.rpm.sh" | sudo -E bash
 sudo dnf install hydroxide
 ```
 
