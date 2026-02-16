@@ -1,6 +1,8 @@
 # Hydroxide Debian & RPM Repository
 
-Automated DEB/RPM repository for Hydroxide (Proton Mail Bridge CLI). Provides easy installation and updates for K-9 Mail users and Linux enthusiasts.
+Automated DEB/RPM repository for Hydroxide (Proton Mail Bridge CLI). 
+Provides easy installation and updates for K-9 Mail users and Linux enthusiasts.
+
 This is a community-maintained build-wrapper. 
 For the actual logic and issues with the bridge itself, please visit the original repository at emersion/hydroxide.
 
@@ -45,8 +47,8 @@ To ensure Hydroxide starts automatically and is accessible from other devices (e
 Define the IP address Hydroxide should listen on. Create the file /etc/default/hydroxide:
 
 ```bash
-# Set to 0.0.0.0 to listen on all interfaces or a specific local IP
-echo 'HYDROXIDE_LISTEN_IP=0.0.0.0' | sudo tee /etc/default/hydroxide
+# Set to a.b.c.d to listen on all interfaces or a specific local IP
+echo 'HYDROXIDE_LISTEN_IP=a.b.c.d' | sudo tee /etc/default/hydroxide
 ```
 
 ### 2. Systemd Unit File
