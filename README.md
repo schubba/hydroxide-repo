@@ -1,6 +1,9 @@
 # Hydroxide Debian & RPM Repository
 
 Automated DEB/RPM repository for Hydroxide (Proton Mail Bridge CLI). 
+
+![Hydroxide Build & Push](https://github.com/schubba/hydroxide-repo/actions/workflows/build.yml/badge.svg)
+
 Provides easy installation and updates for K-9 Mail users and Linux enthusiasts.
 
 This is a community-maintained build-wrapper. 
