@@ -25,18 +25,26 @@ jobs:
 
       - name: Fetch Latest Release and Build
         run: |
+          # 1. Hole die aktuelle Release-Version
           REAL_VERSION=$(curl -s https://api.github.com/repos/emersion/hydroxide/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed 's/v//')
           if [ -z "$REAL_VERSION" ]; then REAL_VERSION="0.1.0"; fi
-          echo "Building stable version: $REAL_VERSION"
+          
+          # 2. Generiere den täglichen Zeitstempel für die Build-Nummer
+          BUILD_TIMESTAMP=$(date +%Y%m%d)
+          
+          echo "Building stable version: $REAL_VERSION (Build: $BUILD_TIMESTAMP)"
 
+          # 3. Baue Hydroxide
           go install github.com/emersion/hydroxide/cmd/hydroxide@v$REAL_VERSION
           cp /home/runner/go/bin/hydroxide .
 
+          # 4. Paket-Metadaten
           DESCRIPTION="A lightweight CLI Proton Mail bridge, providing IMAP/SMTP endpoints."
           MAINTAINER="Martin Schon <schon.mar@protonmail.com>"
           HOMEPAGE="https://github.com/emersion/hydroxide"
 
-          fpm -s dir -t deb -n hydroxide -v $REAL_VERSION \
+          # 5. DEB Paket bauen (mit --iteration für die Build-Nummer)
+          fpm -s dir -t deb -n hydroxide -v $REAL_VERSION --iteration "build$BUILD_TIMESTAMP" \
             --maintainer "$MAINTAINER" \
             --description "$DESCRIPTION" \
             --url "$HOMEPAGE" \
@@ -44,14 +52,15 @@ jobs:
             --vendor "Hydroxide Community" \
             --prefix /usr/local/bin hydroxide
 
-          fpm -s dir -t rpm -n hydroxide -v $REAL_VERSION \
+          # 6. RPM Paket bauen (mit --iteration für die Build-Nummer)
+          fpm -s dir -t rpm -n hydroxide -v $REAL_VERSION --iteration "build$BUILD_TIMESTAMP" \
             --maintainer "$MAINTAINER" \
             --description "$DESCRIPTION" \
             --url "$HOMEPAGE" \
             --license "MIT" \
             --vendor "Hydroxide Community" \
             --prefix /usr/local/bin hydroxide
-
+            
       - name: Push to Cloudsmith
         env:
           CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
